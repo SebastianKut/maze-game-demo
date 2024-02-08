@@ -82,8 +82,6 @@ class GameComponent {
     this.keys = this.game.input.keyboard.createCursorKeys();
 
     Ball._player = this.ball;
-
-    this.requestDeviceOrientation();
     // window.addEventListener("deviceorientation", this.handleOrientation, true);
 
     this.time.events.loop(Phaser.Timer.SECOND, this.updateCounter, this);
@@ -97,28 +95,6 @@ class GameComponent {
     this.borderGroup.create(Ball._WIDTH - 2, 0, 'border-vertical');
     this.borderGroup.setAll('body.immovable', true);
     this.bounceSound = this.game.add.audio('audio-bounce');
-  }
-
-  requestDeviceOrientation() {
-    if (
-      typeof DeviceOrientationEvent !== 'undefined' &&
-      typeof DeviceOrientationEvent.requestPermission === 'function'
-    ) {
-      DeviceOrientationEvent.requestPermission()
-        .then((permissionState) => {
-          if (permissionState === 'granted') {
-            window.addEventListener(
-              'deviceorientation',
-              this.handleOrientation,
-              true
-            );
-          }
-        })
-        .catch(console.error);
-    } else {
-      // handle regular non iOS 13+ devices
-      console.log('not iOS');
-    }
   }
 
   initLevels() {
@@ -245,15 +221,6 @@ class GameComponent {
     if ('vibrate' in window.navigator) {
       window.navigator.vibrate(100);
     }
-  }
-
-  handleOrientation(e) {
-    // Device Orientation API
-    var x = e.gamma; // range [-90,90], left-right
-    var y = e.beta; // range [-180,180], top-bottom
-    var z = e.alpha; // range [0,360], up-down
-    Ball._player.body.velocity.x += x;
-    Ball._player.body.velocity.y += y * 0.5;
   }
 
   finishLevel() {
